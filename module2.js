@@ -10,14 +10,23 @@ app.use(bp.urlencoded({ extended: true }))
 var jsonData = fs.readFileSync('Express.json');
 var data = JSON.parse(jsonData);
 
+
+const EventEmiter = require('events');
+const myEmmiter = new EventEmiter();
+
+myEmmiter.on('server responce' , (arg)=>console.log(arg));
+myEmmiter.on('server error' , (arg)=>console.log(arg));
+
 const router2 = express.Router();
 router2.route('/book/:id')
 .get( async (req, res) =>{
     if(req.params.id < data.length){
         res.send(data.find(item => item.id == req.params.id));
+        myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
       }else{
         res.status(404)
         res.send('Book with id: ' +req.params.id + " is not in libary");
+        myEmmiter.emit('server error' , 'Bad operation, server cant responce');
       }
 })
 .put( async (req , response) => {
@@ -25,6 +34,7 @@ router2.route('/book/:id')
     if(req.params.id > data.length){
       response.status(404)
       response.send('ID is not correct, this id is not exist, please enter correct value.')
+      myEmmiter.emit('server error' , 'Bad operation, server cant responce');
     }else{
     var id = req.params.id;
   
@@ -35,6 +45,7 @@ router2.route('/book/:id')
   
     fs.writeFileSync('Express.json' , (JSON.stringify(data)));
     response.send(data);
+    myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
   }
   })
 
@@ -45,10 +56,12 @@ router2.route('/book/:id')
     if(req.params.id < data.length){
       data.splice(indexOfArray,1)
       res.send(data);
+      myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
 
     }else{
       res.status(404)
       res.send('Book with id: ' +req.params.id + " is not in libary!");
+      myEmmiter.emit('server error' , 'Bad operation, server cant responce');
 
     }
   

@@ -11,21 +11,29 @@ app.use(bp.urlencoded({ extended: true }))
 var jsonData = fs.readFileSync('Express.json');
 var data = JSON.parse(jsonData);
 
+const EventEmiter = require('events');
+const myEmmiter = new EventEmiter();
+
+myEmmiter.on('server responce' , (arg)=>console.log(arg));
+myEmmiter.on('server error' , (arg)=>console.log(arg));
+
 const router1 = express.Router();
 router1.route('/book')
 
 .get( async (req, res) => {
-  res.send(data)
+        res.send(data)
+        myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
+        
 })
 .post( async (req , res) => {
     if(schema.validate(req.body).error){
         res.send('kamarad, nezadal si hodnoty korektne')
+        myEmmiter.emit('server error' , 'Bad operation, server cant responce');
     }else{
         data.push(req.body);
-        console.log(data);
         res.send(data[data.length-1])
+        myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
     }
-  
 })
 
 const Joi = require('joi');
@@ -37,6 +45,5 @@ const schema = Joi.object({
     tags: Joi.string().required(),
     id: Joi.number()
 });
-
 
 module.exports = router1;

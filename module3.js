@@ -10,6 +10,12 @@ app.use(bp.urlencoded({ extended: true }))
 var jsonData = fs.readFileSync('Express.json');
 var data = JSON.parse(jsonData);
 
+const EventEmiter = require('events');
+const myEmmiter = new EventEmiter();
+
+myEmmiter.on('server responce' , (arg)=>console.log(arg));
+
+
 const router3 = express.Router();
 router3.route('/book/tags')
 
@@ -20,6 +26,7 @@ router3.route('/book/tags')
       tagsList.push(data[i].tags)
     }
     res.send(tagsList)
+    myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
 })
 
 
