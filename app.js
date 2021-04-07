@@ -1,7 +1,9 @@
+//import all used module
 const module1 = require('./module1')
 const module2 = require('./module2')
 const module3 = require('./module3')
 
+//express frmaweork
 const express = require('express');
 const bp = require('body-parser')
 const app = express();
@@ -14,6 +16,8 @@ app.use(bp.urlencoded({ extended: true }))
 var jsonData = fs.readFileSync('Express.json');
 var data = JSON.parse(jsonData);
 
+//used module
 app.use(module3 , module2, module1);
 
+//port on localhost
 app.listen(3020 , () => console.log('server is running') );
