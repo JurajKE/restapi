@@ -12,7 +12,7 @@ var data = JSON.parse(jsonData);
 
 const router2 = express.Router();
 router2.route('/book/:id')
-.get((req, res) =>{
+.get( async (req, res) =>{
     if(req.params.id < data.length){
         res.send(data.find(item => item.id == req.params.id));
       }else{
@@ -20,7 +20,7 @@ router2.route('/book/:id')
         res.send('Book with id: ' +req.params.id + " is not in libary");
       }
 })
-.put((req , response) => {
+.put( async (req , response) => {
 
     if(req.params.id > data.length){
       response.status(404)
@@ -38,7 +38,7 @@ router2.route('/book/:id')
   }
   })
 
-  .delete((req , res) => {
+  .delete( async (req , res) => {
 
     var indexOfArray = req.params.id;
   

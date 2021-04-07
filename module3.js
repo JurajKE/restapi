@@ -13,7 +13,7 @@ var data = JSON.parse(jsonData);
 const router3 = express.Router();
 router3.route('/book/tags')
 
-.get((req , res) => {
+.get( async (req , res) => {
     let tagsList = [];
   
     for (var i = 0; i < data.length; i++){

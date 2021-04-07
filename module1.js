@@ -14,10 +14,10 @@ var data = JSON.parse(jsonData);
 const router1 = express.Router();
 router1.route('/book')
 
-.get((req, res) => {
+.get( async (req, res) => {
   res.send(data)
 })
-.post((req , res) => {
+.post( async (req , res) => {
     if(schema.validate(req.body).error){
         res.send('kamarad, nezadal si hodnoty korektne')
     }else{
