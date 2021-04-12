@@ -1,7 +1,7 @@
 //import all used module
-const module1 = require('./module1')
-const module2 = require('./module2')
-const module3 = require('./module3')
+const module1 = require('./bookController')
+const module2 = require('./bookidController')
+const module3 = require('./bookTagsController')
 
 //express frmaweork
 const express = require('express');

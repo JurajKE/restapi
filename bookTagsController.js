@@ -24,14 +24,31 @@ router3.route('/book/tags')
 
 //Get Request
 .get( async (req , res) => {
-    let tagsList = [];
-  
-    for (var i = 0; i < data.length; i++){
-      tagsList.push(data[i].tags)
-    }
-    res.send(tagsList)
-    myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
+    var unique = getTags().filter((x, i) => getTags().indexOf(x) === i);
+    res.send(unique)
+    serverResponce(200)
 })
+
+
+//get all tags
+const getTags = (book) =>{
+  const items = [];
+  data.map((item) => {
+    item.tags.forEach(element => {
+      items.push(element);
+    });
+  });
+  return items;
+}
+
+//Emitter Good or bad responce
+const serverResponce = (serverStatus) => {
+  if(serverStatus == 200){
+      return myEmmiter.emit('server responce' , 'Correct opperation, server sent data')
+  }else{
+      return myEmmiter.emit('server error' , 'Bad operation, server cant responce')
+  }}
+
 
 //Export this module
 module.exports = router3;

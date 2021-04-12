@@ -27,55 +27,61 @@ router2.route('/book/:id')
 .get( async (req, res) =>{
     if(req.params.id < data.length){
         res.send(data.find(item => item.id == req.params.id));
-        myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
+        serverResponce(200);
       }else{
-        res.status(404)
         res.send('Book with id: ' +req.params.id + " is not in libary");
-        myEmmiter.emit('server error' , 'Bad operation, server cant responce');
+        serverResponce(404);
+        res.status(404);
       }
 })
+
 //Put request
 .put( async (req , response) => {
 
     if(req.params.id > data.length){
-      response.status(404)
       response.send('ID is not correct, this id is not exist, please enter correct value.')
-      myEmmiter.emit('server error' , 'Bad operation, server cant responce');
+      response.status(404);
+      serverResponce(404);
     }else{
-    var id = req.params.id;
-  
-      data[id]["title"] = req.body.title;
-      data[id]["author"] = req.body.author;
-      data[id]["pages"] = req.body.pages;
-      data[id]["tags"] = req.body.tags;
-  
-    //reqwrite file Express.json after put request
-    fs.writeFileSync('Express.json' , (JSON.stringify(data)));
-    response.send(data);
-    myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
+      updateBook(req.params.id , req.body);
+      response.send(data);
+      serverResponce(200);
   }
   })
 
   //delete request
   .delete( async (req , res) => {
-
-    var indexOfArray = req.params.id;
-  
     if(req.params.id < data.length){
-      data.splice(indexOfArray,1)
-      res.send(data);
-      //reqwrite file Express.json after delete request
-      fs.writeFileSync('Express.json' , (JSON.stringify(data)));
-      myEmmiter.emit('server responce' , 'Correct opperation, server sent data');
-
+      deleteBook(req.body);
+      serverResponce(200);
+      res.send(data)
     }else{
-      res.status(404)
       res.send('Book with id: ' +req.params.id + " is not in libary!");
-      myEmmiter.emit('server error' , 'Bad operation, server cant responce');
-
+      serverResponce(404);
+      res.status(404);
     }
-  
   })
+ 
+  //update book
+  const updateBook = (id , book) => {
+    data[id] = book;
+    return data;
+  }
+
+
+  //delete book from libary
+  const deleteBook = (book) =>{
+    data.splice(book.id , 1)
+  }
+
+
+//Emitter Good or bad responce
+const serverResponce = (serverStatus) => {
+  if(serverStatus == 200){
+      return myEmmiter.emit('server responce' , 'Correct opperation, server sent data')
+  }else{
+      return myEmmiter.emit('server error' , 'Bad operation, server cant responce')
+}}
 
 //export this module
 module.exports = router2;
